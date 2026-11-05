@@ -1,160 +1,37 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Stock Screener</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1e293b">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
-    <header class="bg-slate-800 border-b border-slate-700 px-6 py-4 flex justify-between items-center sticky top-0 z-50">
-        <div class="flex items-center space-x-3">
-            <div class="bg-blue-600 text-white p-2 rounded-lg font-bold text-xl">SS</div>
-            <h1 class="text-xl font-bold tracking-wide">PERSONAL STOCK SCREENER</h1>
-        </div>
-        <div class="flex space-x-2">
-            <button id="btn-tab-filter" onclick="switchTab('filter')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm transition"> Filter Config</button>
-            <button id="btn-tab-results" onclick="switchTab('results')" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 font-medium rounded-lg text-sm transition"> Results (<span id="match-count">0</span>)</button>
-        </div>
-    </header>
-
-    <main class="p-4 md:p-6 max-w-7xl mx-auto">
-        <div id="tab-filter" class="space-y-6">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-2 space-y-6">
-                    <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4">
-                        <h2 class="text-lg font-semibold text-blue-400 flex items-center gap-2">📌 Market & Universe</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs text-slate-400 mb-1">Select Universe</label>
-                                <select id="filter-universe" onchange="applyFilters()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-200">
-                                    <option value="SP500">S&P 500 (US)</option>
-                                    <option value="SET">SET (Thai Stocks)</option>
-                                    <option value="WATCHLIST">My Watchlist</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-xs text-slate-400 mb-1">Sector Filter</label>
-                                <select id="filter-sector" onchange="applyFilters()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-200">
-                                    <option value="ALL">All Sectors</option>
-                                    <option value="Technology">Technology</option>
-                                    <option value="Healthcare">Healthcare</option>
-                                    <option value="Financials">Financials</option>
-                                    <option value="Consumer Discretionary">Consumer Discretionary</option>
-                                    <option value="Industrials">Industrials</option>
-                                    <option value="Energy">Energy</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-xs text-slate-400 mb-1">Custom Watchlist Tickers (comma separated)</label>
-                            <input type="text" id="filter-watchlist" placeholder="e.g. AAPL, NVDA, ADVANC, PTT" oninput="applyFilters()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-200">
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4">
-                        <h2 class="text-lg font-semibold text-blue-400 flex items-center gap-2">📊 Fundamental Financials</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div><label class="block text-xs text-slate-400 mb-1">ROE Min (%)</label><input type="number" id="filter-roe" placeholder="e.g. 15" oninput="applyFilters()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200"></div>
-                            <div><label class="block text-xs text-slate-400 mb-1">D/E Ratio Max</label><input type="number" step="0.1" id="filter-de" placeholder="e.g. 1.5" oninput="applyFilters()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200"></div>
-                            <div><label class="block text-xs text-slate-400 mb-1">Gross Profit Margin Min (%)</label><input type="number" id="filter-gpm" placeholder="e.g. 20" oninput="applyFilters()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200"></div>
-                            <div><label class="block text-xs text-slate-400 mb-1">Net Profit Margin Min (%)</label><input type="number" id="filter-npm" placeholder="e.g. 10" oninput="applyFilters()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200"></div>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4">
-                            <h2 class="text-lg font-semibold text-blue-400 flex items-center gap-2">💰 Valuation</h2>
-                            <div class="space-y-3">
-                                <div><label class="block text-xs text-slate-400 mb-1">P/E Max</label><input type="number" id="filter-pe" placeholder="e.g. 25" oninput="applyFilters()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200"></div>
-                                <div><label class="block text-xs text-slate-400 mb-1">P/BV Max</label><input type="number" step="0.1" id="filter-pbv" placeholder="e.g. 3.0" oninput="applyFilters()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200"></div>
-                                <div><label class="block text-xs text-slate-400 mb-1">Dividend Yield Min (%)</label><input type="number" step="0.1" id="filter-div" placeholder="e.g. 2.5" oninput="applyFilters()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-slate-200"></div>
-                            </div>
-                        </div>
-                        <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4">
-                            <h2 class="text-lg font-semibold text-blue-400 flex items-center gap-2">📈 Technicals</h2>
-                            <div class="space-y-3">
-                                <div>
-                                    <label class="block text-xs text-slate-400 mb-1">Price Position vs EMA</label>
-                                    <select id="filter-ema" onchange="applyFilters()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-200">
-                                        <option value="ANY">Any</option>
-                                        <option value="ABOVE_EMA200">Price > EMA 200</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <div class="bg-slate-800 p-5 rounded-xl border border-blue-500/40 sticky top-20">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-slate-200 text-base">LIVE FILTER SUMMARY</h3>
-                            <button onclick="resetFilters()" class="text-xs text-blue-400 hover:underline">Reset All</button>
-                        </div>
-                        <div class="bg-blue-900/40 border border-blue-700/50 p-3 rounded-lg text-center mb-4">
-                            <div class="text-2xl font-extrabold text-blue-300" id="summary-count">0</div>
-                            <div class="text-xs text-slate-300 font-medium">COMPANIES MATCHING CRITERIA</div>
-                        </div>
-                        <div id="active-badges" class="flex flex-wrap gap-2 mb-6 min-h-16"></div>
-                        <button onclick="switchTab('results')" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-lg transition">
-                            SHOW RESULTS NOW →
-                        </button>
-                    </div>
-                </div>
+<thead class="bg-slate-950 text-xs uppercase text-slate-400 sticky-header border-b border-slate-700 select-none">
+    <tr>
+        <th class="p-3 sticky-col bg-slate-950 z-30 cursor-pointer hover:text-emerald-400 transition" onclick="sortTable('ticker')">
+            <div class="flex items-center justify-between">
+                <span>Ticker / Name</span>
+                <span class="flex flex-col text-[10px] leading-none text-emerald-500 ml-1">▲<br>▼</span>
             </div>
-        </div>
-
-        <div id="tab-results" class="hidden space-y-4">
-            <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 flex flex-wrap items-center justify-between text-xs text-slate-300 gap-2">
-                <div class="flex items-center space-x-2 flex-wrap" id="results-summary-tags">
-                    <span class="font-semibold text-blue-400">Active Filters:</span>
-                </div>
-                <button onclick="switchTab('filter')" class="text-blue-400 hover:underline text-xs">Edit Filters</button>
-            </div>
-
-            <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden shadow-xl">
-                <div class="overflow-x-auto max-h-screen-table relative">
-                    <table class="w-full text-left text-sm text-slate-300">
-                        <thead class="bg-slate-950 text-xs uppercase text-slate-400 sticky-header border-b border-slate-700">
-                            <tr>
-                                <th class="p-3 sticky-col bg-slate-950 z-30">Ticker / Name</th>
-                                <th class="p-3 cursor-pointer hover:text-white" onclick="sortTable('price')">Price ⇕</th>
-                                <th class="p-3 cursor-pointer hover:text-white" onclick="sortTable('mcap')">Market Cap ⇕</th>
-                                <th class="p-3 cursor-pointer hover:text-white" onclick="sortTable('pe')">P/E ⇕</th>
-                                <th class="p-3 cursor-pointer hover:text-white" onclick="sortTable('pbv')">P/BV ⇕</th>
-                                <th class="p-3 cursor-pointer hover:text-white" onclick="sortTable('divYield')">Div Yield (%) ⇕</th>
-                                <th class="p-3 cursor-pointer hover:text-white" onclick="sortTable('roe')">ROE (%) ⇕</th>
-                                <th class="p-3 cursor-pointer hover:text-white" onclick="sortTable('de')">D/E ⇕</th>
-                                <th class="p-3 cursor-pointer hover:text-white" onclick="sortTable('gpm')">GPM (%) ⇕</th>
-                                <th class="p-3 cursor-pointer hover:text-white" onclick="sortTable('npm')">NPM (%) ⇕</th>
-                            </tr>
-                        </thead>
-                        <tbody id="stock-table-body" class="divide-y divide-slate-700/50"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <div id="action-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 max-w-sm w-full space-y-4 shadow-2xl relative">
-            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">✕</button>
-            <div class="text-center">
-                <h3 id="modal-ticker" class="text-2xl font-extrabold text-blue-400">AAPL</h3>
-                <p id="modal-name" class="text-xs text-slate-400">Apple Inc.</p>
-            </div>
-            <div class="space-y-2 pt-2">
-                <button id="btn-financials" class="w-full py-3 bg-slate-700 hover:bg-slate-600 rounded-xl font-medium text-slate-100 flex items-center justify-center gap-2 transition">📑 1. ดูงบการเงิน</button>
-                <button id="btn-chart" class="w-full py-3 bg-slate-700 hover:bg-slate-600 rounded-xl font-medium text-slate-100 flex items-center justify-center gap-2 transition">📈 2. ดูกราฟ (TradingView)</button>
-                <button id="btn-gemini" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-medium text-white flex items-center justify-center gap-2 transition">✨ 3. ถาม AI (Gemini)</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="app.js"></script>
-</body>
-</html>
+        </th>
+        <th class="p-3 cursor-pointer hover:text-emerald-400 transition" onclick="sortTable('price')">
+            <div class="flex items-center gap-1"><span>Price</span><span class="flex flex-col text-[10px] leading-none text-emerald-500">▲<br>▼</span></div>
+        </th>
+        <th class="p-3 cursor-pointer hover:text-emerald-400 transition" onclick="sortTable('mcap')">
+            <div class="flex items-center gap-1"><span>Market Cap</span><span class="flex flex-col text-[10px] leading-none text-emerald-500">▲<br>▼</span></div>
+        </th>
+        <th class="p-3 cursor-pointer hover:text-emerald-400 transition" onclick="sortTable('pe')">
+            <div class="flex items-center gap-1"><span>P/E</span><span class="flex flex-col text-[10px] leading-none text-emerald-500">▲<br>▼</span></div>
+        </th>
+        <th class="p-3 cursor-pointer hover:text-emerald-400 transition" onclick="sortTable('pbv')">
+            <div class="flex items-center gap-1"><span>P/BV</span><span class="flex flex-col text-[10px] leading-none text-emerald-500">▲<br>▼</span></div>
+        </th>
+        <th class="p-3 cursor-pointer hover:text-emerald-400 transition" onclick="sortTable('divYield')">
+            <div class="flex items-center gap-1"><span>Div Yield (%)</span><span class="flex flex-col text-[10px] leading-none text-emerald-500">▲<br>▼</span></div>
+        </th>
+        <th class="p-3 cursor-pointer hover:text-emerald-400 transition" onclick="sortTable('roe')">
+            <div class="flex items-center gap-1"><span>ROE (%)</span><span class="flex flex-col text-[10px] leading-none text-emerald-500">▲<br>▼</span></div>
+        </th>
+        <th class="p-3 cursor-pointer hover:text-emerald-400 transition" onclick="sortTable('de')">
+            <div class="flex items-center gap-1"><span>D/E</span><span class="flex flex-col text-[10px] leading-none text-emerald-500">▲<br>▼</span></div>
+        </th>
+        <th class="p-3 cursor-pointer hover:text-emerald-400 transition" onclick="sortTable('gpm')">
+            <div class="flex items-center gap-1"><span>GPM (%)</span><span class="flex flex-col text-[10px] leading-none text-emerald-500">▲<br>▼</span></div>
+        </th>
+        <th class="p-3 cursor-pointer hover:text-emerald-400 transition" onclick="sortTable('npm')">
+            <div class="flex items-center gap-1"><span>NPM (%)</span><span class="flex flex-col text-[10px] leading-none text-emerald-500">▲<br>▼</span></div>
+        </th>
+    </tr>
+</thead>
