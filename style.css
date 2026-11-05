@@ -1,0 +1,21 @@
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.sticky-col {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    background-color: #0f172a;
+}
+
+.max-h-screen-table {
+    max-height: calc(100vh - 180px);
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0f172a; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
