@@ -2,8 +2,14 @@ let allStocks = [
     { ticker: "AAPL", name: "Apple Inc.", market: "SP500", sector: "Technology", price: 232.50, mcap: 3.55, pe: 34.2, pbv: 48.5, divYield: 0.45, roe: 147.2, de: 1.8, gpm: 46.2, npm: 23.9 },
     { ticker: "NVDA", name: "NVIDIA Corp.", market: "SP500", sector: "Technology", price: 138.20, mcap: 3.40, pe: 58.4, pbv: 52.1, divYield: 0.03, roe: 115.4, de: 0.4, gpm: 75.3, npm: 55.0 },
     { ticker: "MSFT", name: "Microsoft Corp.", market: "SP500", sector: "Technology", price: 420.10, mcap: 3.12, pe: 35.1, pbv: 12.3, divYield: 0.72, roe: 38.5, de: 0.5, gpm: 69.4, npm: 35.8 },
+    { ticker: "GOOGL", name: "Alphabet Inc.", market: "SP500", sector: "Technology", price: 180.50, mcap: 2.20, pe: 24.5, pbv: 6.8, divYield: 0.48, roe: 31.2, de: 0.5, gpm: 58.1, npm: 27.5 },
+    { ticker: "META", name: "Meta Platforms", market: "SP500", sector: "Technology", price: 580.20, mcap: 1.48, pe: 27.8, pbv: 9.5, divYield: 0.34, roe: 35.8, de: 0.3, gpm: 81.5, npm: 35.2 },
+    { ticker: "JNJ", name: "Johnson & Johnson", market: "SP500", sector: "Healthcare", price: 160.40, mcap: 0.38, pe: 15.2, pbv: 5.1, divYield: 3.10, roe: 24.5, de: 0.9, gpm: 68.2, npm: 20.1 },
+    { ticker: "JPM", name: "JPMorgan Chase", market: "SP500", sector: "Financials", price: 220.10, mcap: 0.62, pe: 12.4, pbv: 2.1, divYield: 2.15, roe: 17.2, de: 1.4, gpm: 85.0, npm: 31.0 },
+    { ticker: "PG", name: "Procter & Gamble", market: "SP500", sector: "Consumer Discretionary", price: 170.80, mcap: 0.40, pe: 26.1, pbv: 8.2, divYield: 2.35, roe: 32.4, de: 1.1, gpm: 51.2, npm: 18.2 },
     { ticker: "ADVANC", name: "Advanced Info Service", market: "SET", sector: "Technology", price: 285.00, mcap: 0.85, pe: 24.5, pbv: 9.8, divYield: 3.85, roe: 35.4, de: 1.9, gpm: 35.2, npm: 15.6 },
-    { ticker: "PTT", name: "PTT Public Co.", market: "SET", sector: "Energy", price: 33.50, mcap: 0.95, pe: 9.2, pbv: 0.85, divYield: 6.20, roe: 9.8, de: 0.9, gpm: 15.2, npm: 6.1 }
+    { ticker: "PTT", name: "PTT Public Co.", market: "SET", sector: "Energy", price: 33.50, mcap: 0.95, pe: 9.2, pbv: 0.85, divYield: 6.20, roe: 9.8, de: 0.9, gpm: 15.2, npm: 6.1 },
+    { ticker: "BDMS", name: "Bangkok Duset Medical", market: "SET", sector: "Healthcare", price: 28.25, mcap: 0.44, pe: 32.1, pbv: 4.2, divYield: 2.20, roe: 16.5, de: 0.5, gpm: 32.4, npm: 12.5 }
 ];
 
 let filteredStocks = [...allStocks];
@@ -46,6 +52,34 @@ function applyFilters() {
         if (s.pe > peMax || s.pbv > pbvMax || s.divYield < divMin) return false;
         return true;
     });
+
+    // Render Active Badges (Summary Bar)
+    const badgeContainer = document.getElementById('active-badges');
+    const tagsContainer = document.getElementById('results-summary-tags');
+    badgeContainer.innerHTML = '';
+    tagsContainer.innerHTML = '<span class="font-semibold text-blue-400">Active Filters:</span>';
+
+    const addBadge = (text) => {
+        const badge = document.createElement('span');
+        badge.className = "bg-slate-700 text-blue-300 text-xs px-2.5 py-1 rounded-full border border-slate-600 flex items-center gap-1";
+        badge.innerText = text;
+        badgeContainer.appendChild(badge);
+
+        const tag = document.createElement('span');
+        tag.className = "bg-slate-700 text-slate-200 text-xs px-2 py-0.5 rounded";
+        tag.innerText = text;
+        tagsContainer.appendChild(tag);
+    };
+
+    addBadge(`Market: ${universe}`);
+    if (sector !== 'ALL') addBadge(`Sector: ${sector}`);
+    if (roeMin !== -Infinity) addBadge(`ROE > ${roeMin}%`);
+    if (deMax !== Infinity) addBadge(`D/E < ${deMax}`);
+    if (gpmMin !== -Infinity) addBadge(`GPM > ${gpmMin}%`);
+    if (npmMin !== -Infinity) addBadge(`NPM > ${npmMin}%`);
+    if (peMax !== Infinity) addBadge(`P/E < ${peMax}`);
+    if (pbvMax !== Infinity) addBadge(`P/BV < ${pbvMax}`);
+    if (divMin !== -Infinity) addBadge(`Div > ${divMin}%`);
 
     document.getElementById('summary-count').innerText = filteredStocks.length;
     document.getElementById('match-count').innerText = filteredStocks.length;
@@ -102,5 +136,19 @@ function openModal(ticker, name, market) {
 }
 
 function closeModal() { document.getElementById('action-modal').classList.add('hidden'); }
-function resetFilters() { applyFilters(); }
+
+function resetFilters() {
+    document.getElementById('filter-universe').value = 'SP500';
+    document.getElementById('filter-sector').value = 'ALL';
+    document.getElementById('filter-watchlist').value = '';
+    document.getElementById('filter-roe').value = '';
+    document.getElementById('filter-de').value = '';
+    document.getElementById('filter-gpm').value = '';
+    document.getElementById('filter-npm').value = '';
+    document.getElementById('filter-pe').value = '';
+    document.getElementById('filter-pbv').value = '';
+    document.getElementById('filter-div').value = '';
+    applyFilters();
+}
+
 applyFilters();
