@@ -45,9 +45,11 @@ function applyFilters() {
     const divMin = parseFloat(document.getElementById('filter-div').value) || -Infinity;
 
     filteredStocks = allStocks.filter(s => {
+        // แยก Universe ห้ามหุ้นไทยกับหุ้นอเมริกาปะปนกันเด็ดขาด
         if (universe === 'SET' && s.market !== 'SET') return false;
         if (universe === 'SP500' && s.market !== 'SP500') return false;
         if (universe === 'WATCHLIST' && watchlist.length > 0 && !watchlist.includes(s.ticker)) return false;
+        
         if (sector !== 'ALL' && s.sector !== sector) return false;
         if (s.roe < roeMin || s.de > deMax || s.gpm < gpmMin || s.npm < npmMin) return false;
         if (s.pe > peMax || s.pbv > pbvMax || s.divYield < divMin) return false;
@@ -75,7 +77,10 @@ function applyFilters() {
     if (sector !== 'ALL') addBadge(`Sector: ${sector}`);
     if (roeMin !== -Infinity) addBadge(`ROE > ${roeMin}%`);
     if (deMax !== Infinity) addBadge(`D/E < ${deMax}`);
+    if (gpmMin !== -Infinity) addBadge(`GPM > ${gpmMin}%`);
+    if (npmMin !== -Infinity) addBadge(`NPM > ${npmMin}%`);
     if (peMax !== Infinity) addBadge(`P/E < ${peMax}`);
+    if (pbvMax !== Infinity) addBadge(`P/BV < ${pbvMax}`);
     if (divMin !== -Infinity) addBadge(`Div > ${divMin}%`);
 
     document.getElementById('summary-count').innerText = filteredStocks.length;
