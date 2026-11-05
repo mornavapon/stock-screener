@@ -1,28 +1,179 @@
 import json
 import os
-import urllib.request
-import pandas as pd
 import yfinance as yf
 
-print('Fetching S&P 500 ticker list...')
-# ดึงรายชื่อหุ้น S&P 500 ล่าสุดจาก Wikipedia
-url = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
-tables = pd.read_html(url)
-sp500_tickers = tables[0]['Symbol'].tolist()
-
-# ทำความสะอาดสัญลักษณ์ (เช่น บางตัวใช้จุด ให้เปลี่ยนเป็นขีดตามรูปแบบ yahoo)
-sp500_tickers = [t.replace('.', '-') for t in sp500_tickers]
-
-# รวมหุ้นไทย SET ที่คุณสนใจเข้าไปด้วย (เติม .BK)
-set_tickers = ['ADVANC.BK', 'PTT.BK', 'BDMS.BK', 'CPALL.BK', 'SCC.BK']
-
-all_tickers = sp500_tickers + set_tickers
-print(f'Total tickers to fetch: {len(all_tickers)}')
+# รายชื่อหุ้น Top 150 Market Cap ครอบคลุม US (S&P 500 ตัวท็อป) และหุ้นไทย (SET)
+tickers = [
+    # --- Mega Cap & Tech Giants (US) ---
+    'AAPL',
+    'MSFT',
+    'NVDA',
+    'GOOGL',
+    'AMZN',
+    'META',
+    'BRK-B',
+    'LLY',
+    'AVGO',
+    'TSLA',
+    'JPM',
+    'WMT',
+    'V',
+    'XOM',
+    'MA',
+    'JNJ',
+    'PG',
+    'COST',
+    'HD',
+    'ABBV',
+    'NFLX',
+    'MRK',
+    'BAC',
+    'CVX',
+    'AMD',
+    'ORCL',
+    'KO',
+    'PEP',
+    'ADBE',
+    'CRM',
+    'TMO',
+    'MCD',
+    'CSCO',
+    'ABT',
+    'ACN',
+    'PFE',
+    'LIN',
+    'DIS',
+    'WFC',
+    'DHR',
+    'PM',
+    'INTC',
+    'IBM',
+    'QCOM',
+    'AMGN',
+    'CAT',
+    'GE',
+    'TXN',
+    'UNH',
+    'VZ',
+    # --- Large Cap Growth & Value (US) ---
+    'SPGI',
+    'ISRG',
+    'COP',
+    'NOW',
+    'RTX',
+    'BKNG',
+    'PGR',
+    'TJX',
+    'ETN',
+    'AXP',
+    'LMT',
+    'SYK',
+    'BLK',
+    'GILD',
+    'MDLZ',
+    'VRTX',
+    'CB',
+    'PANw',
+    'ADI',
+    'EQIX',
+    'BSX',
+    'CI',
+    'SHW',
+    'C',
+    'AMT',
+    'MO',
+    'MU',
+    'ICE',
+    'SLB',
+    'LRCX',
+    'CL',
+    'REGN',
+    'ZTS',
+    'CDNS',
+    'SNPS',
+    'GD',
+    'HUM',
+    'NSC',
+    'EMR',
+    'ETR',
+    'MCO',
+    'USB',
+    'PNC',
+    'TFC',
+    'CME',
+    'APD',
+    'CLX',
+    'MAR',
+    'GM',
+    'F',
+    # --- Industrials, Energy, Financials & Consumer (US) ---
+    'DE',
+    'MMM',
+    'ITW',
+    'CSX',
+    'UNP',
+    'NSC',
+    'FDX',
+    'UPS',
+    'NOC',
+    'HES',
+    'OXY',
+    'MPC',
+    'PSX',
+    'VLO',
+    'EOG',
+    'PXD',
+    'OKE',
+    'KMI',
+    'WMB',
+    'HAL',
+    'BKR',
+    'BA',
+    'HON',
+    'SBUX',
+    'NKE',
+    'TGT',
+    'LOW',
+    'BK',
+    'STT',
+    'NTRS',
+    # --- Thai Stocks (SET Top 30) ---
+    'ADVANC.BK',
+    'PTT.BK',
+    'AOT.BK',
+    'PTTEP.BK',
+    'SCB.BK',
+    'KBANK.BK',
+    'BDMS.BK',
+    'CPALL.BK',
+    'GULF.BK',
+    'SCC.BK',
+    'BBL.BK',
+    'KTB.BK',
+    'CPN.BK',
+    'CRC.BK',
+    'IVL.BK',
+    'PTTGC.BK',
+    'TOP.BK',
+    'TRUE.BK',
+    'DTAC.BK',
+    'EA.BK',
+    'GPSC.BK',
+    'BGRIM.BK',
+    'MINT.BK',
+    'LH.BK',
+    'SPALI.BK',
+    'AP.BK',
+    'BH.BK',
+    'COM7.BK',
+    'BEM.BK',
+    'BTS.BK',
+]
 
 results = []
+print(f'Total target tickers: {len(tickers)}')
 
-# วิ่งดึงข้อมูล (แนะนำให้ดึงแบบทีละตัว หรือใช้ batch เพื่อความเสถียร)
-for symbol in all_tickers:
+for symbol in tickers:
   try:
     t = yf.Ticker(symbol)
     info = t.info
@@ -48,9 +199,9 @@ for symbol in all_tickers:
         'npm': (info.get('profitMargins', 0) or 0) * 100,
     }
     results.append(stock_data)
+    print(f'Fetched {clean_ticker} successfully.')
   except Exception as e:
-    # ข้ามตัวที่ดึงไม่ผ่าน
-    continue
+    print(f'Error fetching {symbol}: {e}')
 
 os.makedirs('data', exist_ok=True)
 with open('data/stocks.json', 'w', encoding='utf-8') as f:
