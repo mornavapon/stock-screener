@@ -2,7 +2,7 @@ import json
 import os
 import yfinance as yf
 
-# รายชื่อหุ้น Top 150 Market Cap ครอบคลุม US (S&P 500 ตัวท็อป) และหุ้นไทย (SET)
+# รายชื่อหุ้น Top 150+ Market Cap ครอบคลุม US (S&P 500) และหุ้นไทย (SET) เพิ่มเติมตามที่คุณต้องการ
 tickers = [
     # --- Mega Cap & Tech Giants (US) ---
     'AAPL',
@@ -73,7 +73,7 @@ tickers = [
     'MDLZ',
     'VRTX',
     'CB',
-    'PANw',
+    'PANW',
     'ADI',
     'EQIX',
     'BSX',
@@ -112,7 +112,6 @@ tickers = [
     'ITW',
     'CSX',
     'UNP',
-    'NSC',
     'FDX',
     'UPS',
     'NOC',
@@ -122,7 +121,6 @@ tickers = [
     'PSX',
     'VLO',
     'EOG',
-    'PXD',
     'OKE',
     'KMI',
     'WMB',
@@ -137,7 +135,7 @@ tickers = [
     'BK',
     'STT',
     'NTRS',
-    # --- Thai Stocks (SET Top 30) ---
+    # --- Thai Stocks (SET) (รวมของเดิม + เพิ่มเติมตามที่คุณต้องการ) ---
     'ADVANC.BK',
     'PTT.BK',
     'AOT.BK',
@@ -168,6 +166,39 @@ tickers = [
     'COM7.BK',
     'BEM.BK',
     'BTS.BK',
+    # --- หุ้นไทยเพิ่มเติมที่คุณเลือก ---
+    'AXTRA.BK',  # หรือเทียบเท่า CPAXT
+    'CPAXT.BK',
+    'CPF.BK',
+    'DCC.BK',
+    'DRT.BK',
+    'EGCO.BK',
+    'HMPRO.BK',
+    'IMPACT.BK',
+    'MJLF.BK',
+    'RATCH.BK',
+    'TVO.BK',
+    'OR.BK',
+    'TFMAMA.BK',
+    'BJC.BK',
+    'JMART.BK',
+    'VIH.BK',
+    'KKP.BK',
+    'CENTEL.BK',
+    'TU.BK',
+    'BTG.BK',
+    'ADVICE.BK',
+    'SYNEX.BK',
+    'SIS.BK',
+    'PSH.BK',
+    'BCP.BK',
+    'AIT.BK',
+    'PDG.BK',
+    'CBG.BK',
+    'OSP.BK',
+    'VAYU1.BK',
+    'DELTA.BK',
+    'TDEX.BK',
 ]
 
 results = []
