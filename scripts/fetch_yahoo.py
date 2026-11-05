@@ -135,6 +135,8 @@ tickers = [
     'BK',
     'STT',
     'NTRS',
+    'SCHW',
+    'DUK',
     # --- Thai Stocks (SET) (รวมของเดิม + เพิ่มเติมตามที่คุณต้องการ) ---
     'ADVANC.BK',
     'PTT.BK',
