@@ -1,4 +1,5 @@
 # Personal Stock Screener PWA
+<img width="1401" height="814" alt="Screenshot 2026-11-10 102607" src="https://github.com/user-attachments/assets/59850a22-4706-406c-8250-b48928b1110b" />
 
 เว็บแอปพลิเคชัน Progressive Web App (PWA) สำหรับคัดกรองหุ้นส่วนตัว (S&P 500 และ SET) ทำงานร่วมกับ GitHub Actions และ Yahoo Finance
 
