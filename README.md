@@ -3,6 +3,11 @@
 
 เว็บแอปพลิเคชัน Progressive Web App (PWA) สำหรับคัดกรองหุ้นส่วนตัว (S&P 500 และ SET) ทำงานร่วมกับ GitHub Actions และ Yahoo Finance
 
+หน้าเวปแอป
+https://mornavapon.github.io/stock-screener/
+
+เวปไซต์ไปลิ้งเอไอที่ช่วยสร้าง
+https://chatgpt.com/g/g-p-6ae01a981d208191b90116a6a767d75e-github/c/6adf5dca-7538-83ec-982d-4aa934d56f95
 ---
 
 ## 📖 คู่มือวิธีเพิ่ม หรือ ลดรายชื่อหุ้น (Top 150 Tickers)
