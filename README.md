@@ -1,11 +1,13 @@
 # Personal Stock Screener PWA
 <img width="1401" height="814" alt="Screenshot 2026-11-10 102607" src="https://github.com/user-attachments/assets/59850a22-4706-406c-8250-b48928b1110b" />
 
+(พัฒนาค้างอยู่ ติดปัญหาหลายอย่างเลยเลิกไปก่อน)
+
 เวปไซต์ไปยังเอไอที่สร้าง
 https://chatgpt.com/g/g-p-6ae01a981d208191b90116a6a767d75e-github/c/6adcc4d6-142c-83ec-848c-e8575a2cf8f6
 
 เว็บแอปพลิเคชัน Progressive Web App (PWA) สำหรับคัดกรองหุ้นส่วนตัว (S&P 500 และ SET) ทำงานร่วมกับ GitHub Actions และ Yahoo Finance
-(พัฒนาค้างอยู่ ติดปัญหาหลายอย่างเลยเลิกไปก่อน)
+
 
 หน้าเวปแอป
 https://mornavapon.github.io/stock-screener/
